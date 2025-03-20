@@ -1,0 +1,262 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f7f7f7; /* Fundo claro */
+    color: #333; /* Texto escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff; /* Fundo do container claro */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 100%;
+    max-width: 420px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* .container:hover {
+    transform: translateY(-10px);
+} */ 
+
+label {
+    font-weight: 400;
+    margin-top: 20px; /* Aumentei o espaçamento entre os labels */
+    font-size: 18px;
+    color: #333; /* Texto escuro */
+    letter-spacing: 0.5px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px; /* Maior espaçamento entre o input e o select */
+}
+
+#search {
+    width: 75%; /* O input ocupa 75% do espaço */
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd; /* Borda suave */
+    font-size: 16px;
+    background-color: #f5f5f7; /* Fundo suave */
+    color: #333; /* Texto escuro */
+}
+
+#method {
+    width: 25%; /* O select ocupa 25% */
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd; /* Borda suave */
+    background-color: #f5f5f7; /* Fundo suave */
+    font-size: 16px;
+    color: #333; /* Texto escuro */
+    margin-left: 15px;
+}
+
+input, select, textarea, button {
+    width: 100%;
+    padding: 16px;
+    margin-block: 5px;
+    border-radius: 12px;
+    border: 1px solid #ddd; /* Borda suave */
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #f5f5f7; /* Fundo suave */
+    color: #333; /* Texto escuro */
+    transition: border-color 0.3s, background-color 0.3s;
+}
+small {
+    color: #6c757d; /* Cor cinza suave */
+    font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+    background-color: #fff; /* Fundo branco quando em foco */
+    border-color: #007aff; /* Azul suave */
+    outline: none;
+
+}
+
+button {
+    background-color: #007aff; /* Azul suave */
+    color: white;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 14px;
+    border-radius: 12px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0051c1; /* Azul mais escuro */
+    transform: scale(1.05);
+}
+
+textarea {
+    resize: vertical;
+    background-color: #f5f5f7; /* Fundo suave */
+    border: 1px solid #ddd; /* Borda suave */
+}
+
+.more-options-btn {
+    background-color: transparent; /* Sem fundo */
+    color: #6c757d; /* Cor cinza suave para o texto */
+    font-size: 16px;
+    border: 1px solid #ccc; /* Borda mais suave */
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.more-options-btn:hover {
+    background-color: #f5f5f7; /* Fundo suave e neutro no hover */
+    color: #495057; /* Cor de texto mais escura no hover */
+    transform: scale(1.02); /* Efeito de zoom discreto */
+}
+
+/* Button Donwload */
+
+#btn-download {
+    cursor: pointer;
+    display: auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    top: 5px;
+    left: calc(50% - 24px);
+  }
+  #btn-download:hover {
+    background: rgba(34, 50, 84, 0.03);
+  }
+  #btn-download svg {
+    margin: 16px 0 0px 16px;
+    fill: none;
+    transform: translate3d(0, 0, 0);
+  }
+  #btn-download svg polyline,
+  #btn-download svg path {
+    stroke: #0077FF;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+    transition-delay: 0.3s;
+  }
+  #btn-download svg path#check {
+    stroke-dasharray: 38;
+    stroke-dashoffset: 114;
+    transition: all 0.4s ease;
+  }
+  #btn-download.downloaded svg .svg-out {
+    opacity: 0;
+    animation: drop 0.3s linear;
+    transition-delay: 0.4s;
+  }
+  #btn-download.downloaded svg path#check {
+    stroke: #20CCA5;
+    stroke-dashoffset: 174;
+    transition-delay: 0.4s;
+  }
+  
+  @keyframes drop {
+    20% {
+      transform: translate(0, -3px);
+    }
+    80% {
+      transform: translate(0, 2px);
+    }
+    95% {
+      transform: translate(0, 0);
+    }
+  }
+  .credit {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    transition: all 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    opacity: 0.6;
+  }
+  .credit img {
+    width: 72px;
+  }
+  .credit:hover {
+    transform: scale(0.95);
+  }
+  
+/* Fundo do modal */
+.modal {
+  display: none; /* Oculto por padrão */
+  position: fixed;
+  z-index: 1000; /* Garante que fique sobre outros elementos */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  opacity: 0; /* Inicialmente invisível */
+  visibility: hidden; /* Inicialmente invisível */
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* Suaviza a transição */
+}
+
+/* Classe 'show' será usada para exibir o modal */
+.modal.show {
+  display: flex; /* Torna o modal visível */
+  opacity: 1; /* Torna o modal visível */
+  visibility: visible; /* Torna o modal visível */
+}
+
+/* Caixa do modal */
+.modal-content {
+  background: rgba(255, 255, 255, 0.8); /* Fundo semi-transparente */
+  backdrop-filter: blur(10px); /* Efeito vidro */
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animação de entrada suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Botão de fechar */
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #ff0000;
+}

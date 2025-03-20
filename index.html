@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraper Web</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <form onsubmit="event.preventDefault(); startRequest();">
+            <label for="result" style="font-size: 30px; font-weight: 600;">Scraper Web</label>
+            
+            <div class="input-container">
+                <input type="url" id="search" placeholder="Ex: https://api.exemplo.com" onchange="updateLink()" required>
+                <select id="method">
+                    <option value="GET">GET</option>
+                </select>
+            </div>
+
+            <input type="" id="Header" oninput="previewJSON('Header')" class="headers" placeholder='Headers  {"Content-Type": "application/json"}'>
+            <input id="Body" oninput="previewJSON('Body')" class="body" placeholder='Body {nome: "Maria"}'>
+            <pre id="outputHeader"></pre> 
+            <pre id="outputBody"></pre>
+
+            <div class="more-options">
+                <button type="button" class="more-options-btn" onclick="toggleOptions()">Mais Opções</button>       
+                <div id="extra-options" style="display: none;">
+                    <label for="var_Value">Variáveis 
+                        <small>(Use {VAR} no link da API onde for a variável)</small>
+                    </label>
+                    <input type="text" id="var_Search" placeholder="Ex: https://api.exemplo/page={VAR}" disabled placeholder="Este campo é somente leitura">
+                    <input type="text" id="var_Value" placeholder="Ex: 100, 123, 456" onchange="updateLink()">
+                </div>
+            </div>
+            
+            <!-- <label for="result">Resultado:</label> -->
+            <textarea id="result" cols="20" rows="5" readonly></textarea>
+            
+            <button type="submit">Buscar</button>
+            <!-- Botão Baixar -->
+            <div id="btn-download" >
+                <svg width="22px" height="16px" viewBox="0 0 22 16"  id="downloadSVG">
+                  <path d="M2,10 L6,13 L12.8760559,4.5959317 C14.1180021,3.0779974 16.2457925,2.62289624 18,3.5 L18,3.5 C19.8385982,4.4192991 21,6.29848669 21,8.35410197 L21,10 C21,12.7614237 18.7614237,15 16,15 L1,15" id="check"></path>
+                  <polyline points="4.5 8.5 8 11 11.5 8.5" class="svg-out"></polyline>
+                  <path d="M8,1 L8,11" class="svg-out"></path>
+                </svg>
+              </div>
+              
+              <!-- dribbble -->
+              <a class="credit" href="https://dribbble.com/shots/4570587-Download-micro-interaction" target="_blank"></a>
+
+            <!-- Modal -->
+            <div id="downloadModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Formato de Download</h2>
+                <select id="formatSelect">
+                <option value="json">JSON</option>
+                <option value="xls">XLS</option>
+                <option value="csv">CSV</option>
+                </select>
+                <button id="confirmDownload">Confirmar</button>
+            </div>
+            </div>
+              
+              
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
