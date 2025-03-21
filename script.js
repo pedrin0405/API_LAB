@@ -12,8 +12,18 @@ async function startRequest() {
   const url = document.getElementById("search").value.trim();
   const method = document.getElementById("method").value;
   const varValue = document.getElementById("var_Value").value.trim();
-  const headers = document.getElementById("headers").value;
-  const body = document.getElementById("body").value;
+  console.log(document.getElementById("headers"));
+  let headers = document.getElementById("Header");
+  let body = document.getElementById("Body");
+  let data_API = document.getElementById("data_API").value;
+
+  if (headers?.value && headers.value.trim() !== "") {
+    headers = JSON.parse(headers.value);
+  }
+  
+  if (body?.value && body.value.trim() !== "") {
+    body = JSON.parse(body.value);
+  }
 
   if (!url) {
     alert("Por favor, digite uma URL válida.");
@@ -26,7 +36,14 @@ async function startRequest() {
     if (!varValue) {
       // Requisição única
       const response = await request(url, method,  headers, body);
-      handleResponse(response);
+      if (!data_API || data_API.trim() === "") {
+        handleResponse(response);
+      } else {
+
+        let newResponse = unwrapValues(response[data_API]);
+        handleResponse(newResponse);
+      }
+
     } else {
       // Processamento múltiplo
       const listVar = varValue.split(",").map(item => item.trim());
@@ -68,11 +85,22 @@ function handleResponse(response) {
 // Função para realizar requisições HTTP
 async function request(url, method, headers, body) {
   try {
-    const response = await fetch(url, { 
-      method,
-      headers,
-      body
-    });
+
+    const options = { method }; // Sempre inclui o método
+
+    console.log("H: "+ JSON.stringify(headers) + " | B: " + JSON.stringify(body))
+
+    if (headers) options.headers = headers;
+
+
+    // Apenas adiciona o body se NÃO for um GET ou HEAD e se body existir
+    if (body && method !== "GET" && method !== "HEAD") {
+        options.body = body;
+    }
+
+    console.log("O: " + JSON.stringify(options))
+
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       throw new Error(`Erro HTTP: ${response.status}`);
@@ -142,8 +170,8 @@ function ModalDownload() {
   }
 
   // Função de download em XLSX (Excel)
-  function downloadXLS() {
-    if (data_XLS.length === 0) {
+  function downloadXLS(data) {
+    if (data.length === 0) {
       alert("Nenhum dado disponível para exportação.");
       return;
     }
@@ -153,12 +181,60 @@ function ModalDownload() {
       return;
     }
 
+    // Transformar o array em um formato comum para o XLSX
+    let data_XLS = formatDataForExport(data);
+
+    // Criando a planilha
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(data_XLS);
+    const ws = XLSX.utils.aoa_to_sheet([Object.keys(data_XLS[0])]); // Cabeçalho
+    console.log(JSON.stringify(data_XLS[0]))
+    console.log("WS: " + JSON.s(ws))
+
+    // Adicionando os dados sem repetir cabeçalho
+    data_XLS.forEach(item => {
+      const row = Object.values(item);
+      XLSX.utils.sheet_add_aoa(ws, [row], { origin: -1 }); // Adiciona linha abaixo da última
+    });
+
+    // Adiciona a aba à planilha
     XLSX.utils.book_append_sheet(wb, ws, "Dados");
 
+    // Gera o arquivo XLSX
     XLSX.writeFile(wb, "dados.xlsx");
   }
+
+  // Função para transformar o dado para um formato simples
+  function formatDataForExport(data) {
+    if (Array.isArray(data)) {
+      return data.map(item => flattenObject(item)); // Achatar cada item
+    }
+    return [];
+  }
+
+  // Função para "achatar" o objeto (caso ele tenha objetos aninhados)
+  function flattenObject(obj, prefix = '') {
+    let result = {};
+
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        const newKey = prefix ? `${prefix}_${key}` : key;
+
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+          // Recursão para objetos aninhados
+          Object.assign(result, flattenObject(value, newKey));
+        } else if (Array.isArray(value)) {
+          // Se for array, transforma em string ou outro formato
+          result[newKey] = JSON.stringify(value); // Aqui pode ser um formato diferente, caso queira
+        } else {
+          result[newKey] = value;
+        }
+      }
+    }
+
+    return result;
+  }
+
 
   // Função de download em CSV
   function downloadCSV() {
@@ -187,7 +263,7 @@ function ModalDownload() {
   confirmBtn.addEventListener("click", () => {
     const format = formatSelect.value;
     if (format === "json") downloadJSON();
-    else if (format === "xls") downloadXLS();
+    else if (format === "xls") downloadXLS(data_XLS);
     else if (format === "csv") downloadCSV();
 
     closeModal();
@@ -216,3 +292,14 @@ function previewJSON(name) {
     document.getElementById(`output${name}`).classList.add("error");
 }
 }
+
+// Organiza as Arrays de retorno
+function unwrapValues(arr) {
+  // Verifica se arr é um array e se o primeiro item é um array
+  if (Array.isArray(arr) && arr.length === 1) {
+    return unwrapValues(arr[0]);  // Chama recursivamente para "desembrulhar"
+  }
+  return arr;  // Retorna o valor quando não há mais arrays dentro
+}
+
+console.log(data_XLS)
