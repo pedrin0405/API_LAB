@@ -74,7 +74,13 @@ function handleResponse(response) {
   }
 
   if (!data_XLS.some(item => JSON.stringify(item) === JSON.stringify(response))) {
-    data_XLS = (unwrapValues(response));
+    if((Array.isArray(response))){
+      data_XLS = (unwrapValues(response));
+    }
+    else{
+      data_XLS.push(response)
+    }
+    
   } 
 }
 
