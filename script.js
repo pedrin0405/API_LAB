@@ -9,9 +9,9 @@ let data_XLS = [];
 
 // Função principal para iniciar a requisição
 async function startRequest() {
-  const url = document.getElementById("search").value.trim();
-  const method = document.getElementById("method").value;
-  const varValue = document.getElementById("var_Value").value.trim();
+  let url = document.getElementById("search").value.trim();
+  let method = document.getElementById("method").value;
+  let varValue = document.getElementById("var_Value").value.trim();
   let headers = document.getElementById("Header");
   let body = document.getElementById("Body");
   let data_API = document.getElementById("data_API").value;
@@ -33,7 +33,7 @@ async function startRequest() {
 
   try {
     if (!varValue) { // Requisição única
-      const response = await request(url, method,  headers, body);
+      const response = await request(url, method, headers, body);
 
       if (!data_API || data_API.trim() === "") {
         handleResponse(response);
@@ -46,7 +46,7 @@ async function startRequest() {
 
       for (const variavel of listVar) {
         const newUrl = configUrl(url, variavel);
-        const response = await request(newUrl, method);
+        const response = await request(newUrl, method, headers, body);
         handleResponse(response);
       }
     }
@@ -96,6 +96,7 @@ async function request(url, method, headers, body) {
     if (body && method !== "GET" && method !== "HEAD") {
         options.body = body;
     }
+
     const response = await fetch(url, options);
 
     if (!response.ok) {
@@ -289,15 +290,23 @@ function previewJSON(name) {
   try {
     const input = document.getElementById(`${name}`).value;
     const jsonData = JSON.parse(input);
-    document.getElementById(`output${name}`).textContent =`${name}: ` + JSON.stringify(jsonData, null, 2);
-    document.getElementById(`output${name}`).classList.remove("error");
+    const extra_output = document.getElementById(`output${name}`)
+
+    extra_output.style.display = "block";
+
+    extra_output.textContent =`${name}: ` + JSON.stringify(jsonData, null, 2);
+    extra_output.classList.remove("error");
+
 } catch (error) {
     // document.getElementById(`output${num}`).textContent = "Erro: JSON inválido!";
-    document.getElementById(`output${name}`).classList.add("error");
+    const extra_output = document.getElementById(`output${name}`)
+
+    extra_output.classList.add("error");
+    extra_output.style.display = "none";
 }
 }
 
-// Organiza as Arrays de retorno
+// Organiza as Arrays de retorno 
 function unwrapValues(arr) {
   // Verifica se arr é um array e se o primeiro item é um array
   if (Array.isArray(arr) && arr.length === 1) {
@@ -319,4 +328,15 @@ function getJsonKeys(obj, prefix = "") {
   }
 
   return keys;
+}
+
+function cleanData(){
+  data_JSON = null;
+  data_XLS.length = 0;
+  document.getElementById("result").value = "Limpando dados Salvos..."
+
+  setTimeout(() => {
+    // Executando depois de 3 segundos!;
+    document.getElementById("result").value = "";
+  }, 1000);
 }

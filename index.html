@@ -16,6 +16,8 @@
                     <input type="url" id="search" placeholder="Ex: https://api.exemplo.com" onchange="updateLink()" required>
                     <select id="method">
                         <option value="GET">GET</option>
+                        <option value="HEAD">HEAD</option>
+                        <option value="POST">POST</option>
                     </select>
                 </div>
 
@@ -25,8 +27,6 @@
                         <input type="" id="Header" oninput="previewJSON('Header')" class="headers" placeholder='Headers  {"Content-Type": "application/json"}'>
                         <input id="Body" oninput="previewJSON('Body')" class="body" placeholder='Body {nome: "Maria"}'>
                         <input id="data_API" placeholder='Eg Data, Result'>
-                        <pre id="outputHeader"></pre> 
-                        <pre id="outputBody"></pre>
                         
                         <label for="var_Value">Variáveis 
                             <small>(Use {VAR} no link da API onde for a variável)</small>
@@ -71,8 +71,15 @@
         </div>
         
         <div class="container" >
-            <label for="result" style="font-size: 19px; font-weight: 600;">Resultado:</label>
-            <textarea id="result" cols="20" rows="11" readonly></textarea>
+            
+            <pre id="outputHeader" ></pre> 
+            <pre id="outputBody"></pre>
+
+            <label for="result" style="font-size: 22px; font-weight: 600;">Resultado:</label>
+            <textarea id="result" cols="20" rows="7" readonly></textarea>
+
+            <button onclick=cleanData() class="more-options-btn">Limpar Dados</button>
+            <!-- style="background-color: #cc0909d2;" -->
             
         </div>
     </div>

@@ -47,6 +47,22 @@ label {
     margin-top: 10px; /* Maior espaçamento entre o input e o select */
 }
 
+pre {
+  height: 3em; /* Limita a 3 linhas */
+  overflow-y: auto; /* Permite rolagem se o conteúdo for maior */
+  padding: 10px; /* Adiciona espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  background-color: #f5f5f7; /* Fundo suave */
+  font-family: 'Courier New', monospace; /* Fonte monoespaçada */
+  font-size: 14px; /* Tamanho de fonte legível */
+  line-height: 1.5; /* Espaçamento entre linhas */
+  border: 1px solid #ddd; /* Borda sutil */
+  white-space: pre-wrap; /* Mantém quebras de linha */
+  word-wrap: break-word; /* Evita que textos longos saiam da caixa */
+  display: none;
+  resize: vertical;
+}
+
 #search {
     width: 75%; /* O input ocupa 75% do espaço */
     padding: 14px;
