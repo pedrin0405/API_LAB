@@ -12,7 +12,6 @@ async function startRequest() {
   const url = document.getElementById("search").value.trim();
   const method = document.getElementById("method").value;
   const varValue = document.getElementById("var_Value").value.trim();
-  console.log(document.getElementById("headers"));
   let headers = document.getElementById("Header");
   let body = document.getElementById("Body");
   let data_API = document.getElementById("data_API").value;
@@ -33,19 +32,16 @@ async function startRequest() {
   document.getElementById("result").value = "Buscando dados...";
 
   try {
-    if (!varValue) {
-      // Requisição única
+    if (!varValue) { // Requisição única
       const response = await request(url, method,  headers, body);
+
       if (!data_API || data_API.trim() === "") {
         handleResponse(response);
       } else {
+        handleResponse(response[data_API]);
+      } 
 
-        let newResponse = unwrapValues(response[data_API]);
-        handleResponse(newResponse);
-      }
-
-    } else {
-      // Processamento múltiplo
+    } else {// Processamento múltiplo
       const listVar = varValue.split(",").map(item => item.trim());
 
       for (const variavel of listVar) {
@@ -78,7 +74,7 @@ function handleResponse(response) {
   }
 
   if (!data_XLS.some(item => JSON.stringify(item) === JSON.stringify(response))) {
-    data_XLS.push(response);
+    data_XLS = (unwrapValues(response));
   } 
 }
 
@@ -87,9 +83,6 @@ async function request(url, method, headers, body) {
   try {
 
     const options = { method }; // Sempre inclui o método
-
-    console.log("H: "+ JSON.stringify(headers) + " | B: " + JSON.stringify(body))
-
     if (headers) options.headers = headers;
 
 
@@ -97,9 +90,6 @@ async function request(url, method, headers, body) {
     if (body && method !== "GET" && method !== "HEAD") {
         options.body = body;
     }
-
-    console.log("O: " + JSON.stringify(options))
-
     const response = await fetch(url, options);
 
     if (!response.ok) {
@@ -115,7 +105,18 @@ async function request(url, method, headers, body) {
 // Alterna exibição das opções extras
 function toggleOptions() {
   const extraOptions = document.getElementById("extra-options");
-  extraOptions.style.display = extraOptions.style.display === "none" ? "block" : "none";
+  const botao = document.getElementById("options-btn");
+
+  if (extraOptions.style.display === "none") {
+    extraOptions.style.display = "block";
+    botao.innerHTML = "Menos Opções"; 
+
+  } else {
+      extraOptions.style.display = "none";
+      botao.innerHTML = "Mais Opções"; 
+  }
+
+
 }
 
 // Atualiza o link baseado na variável fornecida
@@ -186,9 +187,10 @@ function ModalDownload() {
 
     // Criando a planilha
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet([Object.keys(data_XLS[0])]); // Cabeçalho
-    console.log(JSON.stringify(data_XLS[0]))
-    console.log("WS: " + JSON.s(ws))
+
+    console.log(">> Drive:"+ JSON.stringify(data_XLS))
+
+    const ws = XLSX.utils.aoa_to_sheet([Object.keys(data_XLS)]); // Cabeçalho
 
     // Adicionando os dados sem repetir cabeçalho
     data_XLS.forEach(item => {
@@ -235,7 +237,6 @@ function ModalDownload() {
     return result;
   }
 
-
   // Função de download em CSV
   function downloadCSV() {
     if (data_XLS.length === 0) {
@@ -244,7 +245,7 @@ function ModalDownload() {
     }
 
     let csvContent = "data:text/csv;charset=utf-8,";
-    const headers = Object.keys(data_XLS[0]);
+    const headers = getJsonKeys(data_XLS[0]);
     csvContent += headers.join(",") + "\r\n";
 
     data_XLS.forEach(row => {
@@ -302,4 +303,17 @@ function unwrapValues(arr) {
   return arr;  // Retorna o valor quando não há mais arrays dentro
 }
 
-console.log(data_XLS)
+function getJsonKeys(obj, prefix = "") {
+  let keys = [];
+
+  for (let key in obj) {
+      let fullKey = prefix ? `${prefix}.${key}` : key; 
+      keys.push(fullKey);
+
+      if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) {
+          keys = keys.concat(getJsonKeys(obj[key], fullKey));
+      }
+  }
+
+  return keys;
+}
