@@ -187,10 +187,7 @@ function ModalDownload() {
 
     // Criando a planilha
     const wb = XLSX.utils.book_new();
-
-    console.log(">> Drive:"+ JSON.stringify(data_XLS))
-
-    const ws = XLSX.utils.aoa_to_sheet([Object.keys(data_XLS)]); // Cabeçalho
+    const ws = XLSX.utils.aoa_to_sheet([Object.keys(data_XLS[0])]); // Cabeçalho
 
     // Adicionando os dados sem repetir cabeçalho
     data_XLS.forEach(item => {
